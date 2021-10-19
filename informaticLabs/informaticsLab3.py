@@ -1,5 +1,5 @@
-from turtle import *
-from math import *
+import turtle
+import math
 import re
 
 def cmp (x):
@@ -101,6 +101,7 @@ def second(st):
     else:
         print('Нет фамилий\n')
 
+#решение третьего задания
 def third(st):
     st = st.lower()
 
