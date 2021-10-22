@@ -6,9 +6,8 @@ import os
 import re
 
 gauth = GoogleAuth()
-gauth.LocalWebserverAuth()	
+gauth.LocalWebserverAuth()
 drive = GoogleDrive(gauth)
-
 
 print('input target folder name')
 targetFolder = input()
@@ -28,11 +27,16 @@ Unuploaded = []
 
 dirId = ''
 
-#ищем не скачаные
+# ищем не скачаные
 for CloudFile in FilesInCloud:
     if CloudFile['title'] == targetFolder:
         dirId = CloudFile['id']
     NamesOfFilesInCloud.append(CloudFile['title'])
+
+if dirId == '':
+    newFolder = drive.CreateFile({'title': targetFolder, 'parents': [], 'mimeType': 'application/vnd.google-apps.folder'})
+    newFolder.Upload()
+    dirId = newFolder['id']
 
 for CloudFile in FilesInCloud:
     Num = 0
@@ -48,7 +52,7 @@ for CloudFile in FilesInCloud:
         except:
             Undownloaded.append(CloudFile)
 
-#ищем не загрушенные на облако
+# ищем не загрушенные на облако
 for LocalFile in LocalFiles:
     try:
         if LocalFile != 'MusicSavior':
@@ -57,38 +61,35 @@ for LocalFile in LocalFiles:
         Unuploaded.append(LocalFile)
 
 #заполняем пробелы в обеих частях
-def upload():
-    for i in range(len(Unuploaded)):
-        print('Progress', i, '/', len(Unuploaded))
-        LocalFile = Unuploaded[i]
-        LocalFileMime, LocalFileEncoding = mimetypes.guess_type(path + LocalFile)
-        print(LocalFile, LocalFileMime)
-        try:
-            file = drive.CreateFile({'title':LocalFile, 'mimeType' : LocalFileMime, 'parents':[{'id':dirId}]})
-            file.Upload()
-            file.SetContentFile(path + LocalFile)
-            file.Upload()
-            print("file ", file['title'], " uploaded\n")
-        except:
-            print("3ajlyna he pa6otaet\n")
-    if len(Unuploaded) > 0:
-        print("Uploading ends")
+#заливаем
+for i in range(len(Unuploaded)):
+    print('Progress', i, '/', len(Unuploaded))
+    LocalFile = Unuploaded[i]
+    LocalFileMime, LocalFileEncoding = mimetypes.guess_type(path + LocalFile)
+    print(LocalFile, LocalFileMime)
+    try:
+        file = drive.CreateFile({'title': LocalFile, 'mimeType': LocalFileMime, 'parents': [{'id': dirId}]})
+        file.Upload()
+        file.SetContentFile(path + LocalFile)
+        file.Upload()
+        print("file ", file['title'], " uploaded\n")
+    except:
+        print("3ajlyna he pa6otaet\n")
+if len(Unuploaded) > 0:
+    print("Uploading ends")
 
-def download():
-    for i in range(len(Undownloaded)):
-        print('Progress', i, '/', len(Undownloaded))
-        CloudFile = Undownloaded[i]
-        try:
-            file = drive.CreateFile({'id': CloudFile['id']})
-            file.GetContentFile(path + CloudFile['title'])
-            print("file ", file['title'], " downloaded\n")
-        except:
-            print("3ajlyna he pa6otaet\n")
-    if len(Undownloaded) > 0:
-        print("Downloading ends")
-
-upload()
-download()
+#скачиваем
+for i in range(len(Undownloaded)):
+    print('Progress', i, '/', len(Undownloaded))
+    CloudFile = Undownloaded[i]
+    try:
+        file = drive.CreateFile({'id': CloudFile['id']})
+        file.GetContentFile(path + CloudFile['title'])
+        print("file ", file['title'], " downloaded\n")
+    except:
+        print("3ajlyna he pa6otaet\n")
+if len(Undownloaded) > 0:
+    print("Downloading ends")
 
 print('Sync Ends')
 
