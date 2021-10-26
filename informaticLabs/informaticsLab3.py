@@ -151,7 +151,7 @@ while (1):
         #определяю смайлик
         
         while(1):
-            clear()            
+            clear()
 
             #определяю смайлик
             f = [':', ';', 'X', '8', '=']
@@ -176,7 +176,10 @@ while (1):
             if tp.lower() == 'end':
                 break
             input()
-        bye()
+        try:
+            bye()
+        except:
+            pass
             
             
     if tp == '2':
