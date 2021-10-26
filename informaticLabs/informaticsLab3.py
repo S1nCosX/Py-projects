@@ -3,8 +3,10 @@ from math import *
 import re
 import os
 
+#очистка консоли (для красоты)
 clear = lambda : os.system('cls')
 
+#компоратор (для сортировки по длинне)
 def cmp (x):
     return len(x)
 
@@ -31,7 +33,6 @@ def SmilingTurtle():
     t.circle(20)
     t.left(135)
 
-    #левый глаз
     t.penup()
     t.forward(50)
     t.left(90)
@@ -85,7 +86,7 @@ def first(st):
 
 #решение второго задания
 def second(st):
-    #находим ФИО, по форме Фамилия И.О., в тексте 
+    #находим ФИО, по форме Фамилия И.О., в тексте (только на русском)
     pttrnFSLN = r'[А-Я]\w+ [А-Я].[А-Я].'
     arrFSLN = re.findall(pttrnFSLN, st)
 
